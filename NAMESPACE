@@ -1,0 +1,16 @@
+
+export("v", "u", "d", "r")
+
+exportClasses("vertexSet","edge", "undirectedEdge", "directedEdge","edgeList",
+              "incidenceList","incidenceMatrix","adjacencyList","adjacencyMatrix",
+              "anyGraph", "generalGraph", "multiGraph", "simpleGraph")
+
+exportMethods("initialize","show",
+              "isEmpty","areTheSame","isPresent",
+              "[","[[","coerce",
+              "names","maxId","recode",
+              "incidenceList","incidenceList<-",
+              "incidenceMatrix", "incidenceMatrix<-",
+              "adjacencyList","adjacencyList<-",
+              "adjacencyMatrix", "adjacencyMatrix<-",
+              "dynamic.Graph","display")
