@@ -2,8 +2,8 @@
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Tue Nov 30 14:32:00 2004
 ## Last Modified By: Luca La Rocca
-## Last Modified On: Sun Jun 26 09:15:00 2005
-## Update Count    : 10
+## Last Modified On: Sun Feb 26 18:01:00 2006
+## Update Count    : 27
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -23,12 +23,24 @@ setMethod("initialize","vertexSet",
 # 'new("vertexSet",x,y)' returns a 'vertexSet' object consisting of a vector of
 # unique syntactically valid names made from the unique elements of 'x' and 'y'
 
+# wrapper for 'vertexSet' construction
+v <- function(...) new("vertexSet",...)
+# just call the right initialize method
+
 # show method for class 'vertexSet'
 setMethod("show","vertexSet",
                  function(object)
                      cat("{",paste(object@.Data,collapse=","),"}",sep="",fill=T)
                 ) # end of setMethod
 # for example '{X1,X2,X3}' denotes a three element 'vertexSet'
+
+## getting and setting information
+
+# 'names' method for class 'vertexSet'
+setMethod("names","vertexSet",function(x) x@.Data)
+# data part is returned
+
+# 'card' method is inherited from class 'vector'
 
 ## property checking
 
@@ -39,12 +51,14 @@ setMethod("areTheSame",c("vertexSet","vertexSet"),
                  function(x,y) setequal(x@.Data,y@.Data))
 # a 'logical' value answering the question is returned
 
-# no 'isPresent' method
-
 ## extraction
 
 # multi extractor method for class 'vertexSet'
-setMethod("[","vertexSet",function(x,i,j=NA,drop=NA) new("vertexSet",x@.Data[i]))
+setMethod("[","vertexSet",function(x,i,j=NA,drop=NA){
+                            if(isEmpty(x)) x
+                            else new("vertexSet",x@.Data[i])
+                          } # end of function
+         ) # end of setMethod
 # a subset of vertices is extracted
 
 # single extractor method for class 'vertexSet' gives a 'character' object
@@ -58,11 +72,7 @@ setAs("vector","vertexSet",function(from,to) new(to,from))
 # on the other hand, typecasting from 'vertexSet' to 'vector'
 # is automatic and gives the '.Data' slot of the 'vertexSet' object
 
-## special
-
-# 'names' method for class 'vertexSet'
-setMethod("names","vertexSet",function(x) x@.Data)
-# data part is returned
+## operators
 
 # union method for 'vertexSet' and 'vertexSet'
 setMethod("+",c("vertexSet","vertexSet"),
@@ -70,15 +80,17 @@ setMethod("+",c("vertexSet","vertexSet"),
                 ) # end of setMethod
 # the union of the two vertex sets is returned
 
+# intersection method for 'vertexSet' and 'vertexSet'
+setMethod("*",c("vertexSet","vertexSet"),
+                 function(e1,e2) new("vertexSet",intersect(e1@.Data,e2@.Data))
+                ) # end of setMethod
+# the intersection of the two vertex sets is returned
+
 # asymmentric difference method for 'vertexSet' and 'vertexSet'
 setMethod("-",c("vertexSet","vertexSet"),
                  function(e1,e2) new("vertexSet",setdiff(e1@.Data,e2@.Data))
                 ) # end of setMethod
 # the asymmetric difference of the two vertex sets is returned
-
-# wrapper for 'vertexSet' construction
-v <- function(...) new("vertexSet", ...)
-# just call the right initialize method
 
 ### ----------------------------------edges------------------------------------
 
@@ -164,6 +176,22 @@ setMethod("initialize","edgeList",
 # returns an 'edgeList' object whose data part is a 'list'
 # containing (only) the arguments of class 'edge'
 
+# wrapper for undirected edge construction
+u <- function(...) new("undirectedEdge",...)
+# just call the right initialize method
+
+# wrapper for directed edge construction
+d <- function(...) new("directedEdge",...)
+# just call the right initialize method
+
+# wrapper for reverse construction
+r <- function(...) {
+           Args<-list(...)
+           if(length(Args)==1) Args<-Args[[1]]
+           new("directedEdge",rev(Args))
+       } # end of function
+# just call the right initialize method
+
 # show method for class 'undirectedEdge'
 setMethod("show","undirectedEdge",
                  function(object){
@@ -180,12 +208,28 @@ setMethod("show","undirectedEdge",
 # '1<>1' denotes a loop and '1--2' an ordinary 'undirectedEdge'
 # while 1--2--3 denotes a three vertex 'undirectedEdge'
 
+# 'showRel' method for class 'undirectedEdge' with reference to a 'vertexSet' object
+setMethod("showRel",c(object="undirectedEdge",code="vertexSet"),
+                 function(object,code){
+                     if(length(object)>1){
+                         cat(code@.Data[object@.Data],sep="--",fill=TRUE)
+                     } else if (length(object)==1){
+                         cat(code@.Data[object@.Data],"<>",code@.Data[object@.Data],sep="",fill=TRUE)
+                     } else{ # 'length(object)==0'
+                         cat("--",fill=TRUE)
+                    } # end of if-else if-else
+                 } # end of function
+                ) # end of setMethod
+# for example '--' denotes the empty 'undirectedEdge'
+# 'a<>a' denotes a loop and 'a--b' an ordinary 'undirectedEdge'
+# while a--b--c denotes a three vertex 'undirectedEdge'
+
 # show method for class 'directedEdge'
 setMethod("show","directedEdge",
                  function(object){
                      len<-length(object)
                      if(len>1) # proper directed edge
-                         buf<-paste(unlist(lapply(object,"paste",collapse="--")),collapse="->")
+                         buf<-paste(unlist(lapply(object@.Data,"paste",collapse="--")),collapse="->")
                      else{ # loop or empty
                          buf<-"->"
                          if (len==1) buf<-paste(buf,paste(object[[1]],collapse="--"),sep="")
@@ -197,6 +241,26 @@ setMethod("show","directedEdge",
 # '->1' denotes a loop and '1->2' an ordinary 'directedEdge'
 # while 1->2--3->4 denotes a general 'directedEdge'
 
+# 'showRel' method for class 'directedEdge' with reference to a 'vertexSet' object
+setMethod("showRel",c(object="directedEdge",code="vertexSet"),
+                 function(object,code){
+                     len<-length(object)
+                     if(len>1) # proper directed edge
+                         buf<-paste(unlist(lapply(object@.Data,function(x){
+                                                         paste(code@.Data[x],collapse="--")
+                                                         } # end of function
+                                                 )),collapse="->")
+                     else{ # loop or empty
+                         buf<-"->"
+                         if (len==1) buf<-paste(buf,paste(code@.Data[object[[1]]],collapse="--"),sep="")
+                     } # end of if-else
+                     cat(buf,fill=TRUE)
+                 } # end of function
+                ) # end of setMethod
+# for example '->' denotes the empty 'directedEdge'
+# '->a' denotes a loop and 'a->b' an ordinary 'directedEdge'
+# while a->b--c->d denotes a general 'directedEdge'
+
 # show method for class 'edgeList'
 setMethod("show","edgeList",
                  function(object){
@@ -207,9 +271,72 @@ setMethod("show","edgeList",
                 ) # end of setMethod
 # just show all edges in the list
 
+# 'showRel' method for class 'edgeList'
+setMethod("showRel",c(object="edgeList",code="vertexSet"),
+                 function(object,code){
+                     cat("{",fill=T)
+                     lapply(object,"showRel",code=code)
+                     cat("}",fill=T)
+                 } # end of function
+                ) # end of setMethod
+# just show all edges in the list
+
+## getting and setting information
+
+# 'maxId' method for 'undirectedEdge'
+setMethod("maxId","undirectedEdge", function(x) if(length(x)==0) return(0) else return(max(x)))
+# gets the maximum numeric identifier of the edge
+
+# 'maxId' operator for 'directedEdge'
+setMethod("maxId","directedEdge", function(x) if(length(x)==0) return(0) else return(max(unlist(x))))
+# gets the maximum numeric identifier of the edge
+
+# 'maxId' operator for 'edgeList'
+setMethod("maxId","edgeList", function(x) if(length(x)==0) return(0) else return(max(unlist(lapply(x,"maxId")))))
+# gets the maximum numeric identifier of the multi-set
+
+# recode method for class 'undirectedEdge' (from a vertex set to a new one)
+setMethod("recode",c(object="undirectedEdge",src="vertexSet",dst="vertexSet"),
+          function(object,src,dst) new("undirectedEdge",match(src[object],dst)))
+# dropping all vertices that are not present in both of them
+
+# recode method for class 'directedEdge' (from a vertex set to a new one)
+setMethod("recode",c(object="directedEdge",src="vertexSet",dst="vertexSet"),
+          function(object,src,dst){
+            res<-lapply(object@.Data,function(x){
+                match(src[x],dst)
+            }) # end of lapply
+            nas<-unlist(lapply(res,"is.na"))
+            if(is(nas,"NULL"))
+                return(new("directedEdge"))
+            else
+                return(new("directedEdge",res[!nas]))
+          }) # end of setMethod
+# dropping all vertices that are not present in both of them
+
+# recode method for class 'edgeList' (from a vertex set to a new one)
+setMethod("recode",c(object="edgeList",src="vertexSet",dst="vertexSet"),
+          function(object,src,dst) new("edgeList",lapply(object,"recode",src=src,dst=dst))
+         ) #Êend of setMethod
+# every edge in the multi-set is dealt with by the appropriate recode method
+
+# 'card' method for class 'directedEdge'
+setMethod("card","directedEdge",
+                 function(object,...){
+                     length(unlist(object))
+                 } # end of function
+                ) # end of setMethod
+# just unlist before taking length
+
 ## property checking
 
 # 'isEmpty' method is inherited from class 'vector'
+
+# 'isPresent' method for 'edge' in 'edgeList'
+setMethod("isPresent",c("edge","edgeList"),
+          function(el,ou) any(unlist(lapply(ou,"areTheSame",y=el)))
+         ) # end of setMethod
+# a 'logical' value answering the question is returned
 
 # comparison method for class 'undirectedEdge'
 setMethod("areTheSame",c("undirectedEdge","undirectedEdge"),
@@ -274,12 +401,6 @@ setMethod("areTheSame",c("edgeList","edgeList"),
          ) # end of setMethod
 # a 'logical' value answering the question is returned
 
-# 'isPresent' method for 'edge' in 'edgeList'
-setMethod("isPresent",c("edge","edgeList"),
-          function(el,ou) any(unlist(lapply(ou,"areTheSame",y=el)))
-         ) # end of setMethod
-# a 'logical' value answering the question is returned
-
 ## extraction
 
 # multi extractor method for class 'undirectedEdge'
@@ -324,25 +445,14 @@ setAs("undirectedEdge","directedEdge",function(from,to) new(to,from))
 setAs("directedEdge","undirectedEdge",function(from,to) new(to,from))
 # just call the constructor and exploit inheritance
 
-## special
+# typecasting from 'list' to 'edgeList'
+setAs("list","edgeList",function(from,to) new(to,from))
+# just call the constructor with 'list' input
 
-# no 'names' method
+# on the other hand, typecasting from "edgeList" to "list"
+# is automatic and gives the '.Data' slot of the 'edgeList' object
 
-# 'maxId' method for 'undirectedEdge'
-setMethod("maxId","undirectedEdge", function(x) return(max(x)))
-# gets the maximum numeric identifier of the edge
-
-# 'maxId' operator for 'directedEdge'
-setMethod("maxId","directedEdge", function(x) return(max(unlist(x))))
-# gets the maximum numeric identifier of the edge
-
-# 'maxId' operator for 'edgeList'
-setMethod("maxId","edgeList", function(x) return(max(unlist(lapply(x,"maxId")))))
-# gets the maximum numeric identifier of the multi-set
-
-# just add the edge to the list
-setMethod("+",c("edge","edgeList"),function(e1,e2){e2+e1})
-# and make the operation symmetric
+## operators
 
 # add operator for 'edgeList' and 'edge'
 setMethod("+",c("edgeList","edge"),
@@ -358,7 +468,7 @@ setMethod("+",c("edge","edgeList"),function(e1,e2){e2+e1})
 # drop operator for 'edgeList' and 'edge' (not symmetric)
 setMethod("-",c("edgeList","edge"),
                  function(e1,e2){
-                     w<-which(unlist(lapply(e1@.Data,"areTheSame",y=e2)))
+                     w<-which(as(unlist(lapply(e1,"areTheSame",y=e2)),"logical"))
                      if(length(w)==0){ # edge is not present in the list
                          return(e1)
                      } else{ # remove the first occurrence
@@ -367,44 +477,3 @@ setMethod("-",c("edgeList","edge"),
                  } # end of function
                 ) # end of setMethod
 # look for the first copy of the edge in the list and remove it
-
-# recode method for class 'undirectedEdge' (from a vertex set to a new one)
-setMethod("recode",c(object="undirectedEdge",src="vertexSet",dst="vertexSet"),
-          function(object,src,dst) new("undirectedEdge",match(src[object],dst)))
-# dropping all vertices that are not present in both of them
-
-# recode method for class 'directedEdge' (from a vertex set to a new one)
-setMethod("recode",c(object="directedEdge",src="vertexSet",dst="vertexSet"),
-          function(object,src,dst){
-            res<-lapply(object,function(x){
-                match(src[x],dst)
-            }) # end of lapply
-            nas<-unlist(lapply(res,"is.na"))
-            if(is(nas,"NULL"))
-                return(new("directedEdge"))
-            else
-                return(new("directedEdge",res[!nas]))
-          }) # end of setMethod
-# dropping all vertices that are not present in both of them
-
-# recode method for class 'edgeList' (from a vertex set to a new one)
-setMethod("recode",c(object="edgeList",src="vertexSet",dst="vertexSet"),
-          function(object,src,dst) new("edgeList",lapply(object,"recode",src=src,dst=dst))
-         ) #Êend of setMethod
-# every edge in the multi-set is dealt with by the appropriate recode method
-
-# wrapper for undirected edge construction
-u <- function(...) new("undirectedEdge", ...)
-# just call the right initialize method
-
-# wrapper for directed edge construction
-d <- function(...) new("directedEdge", ...)
-# just call the right initialize method
-
-# wrapper for reverse construction
-r <- function(...) {
-           Args<-list(...)
-           if(length(Args)==1) Args<-Args[[1]]
-           new("directedEdge",rev(Args))
-       } # end of function
-# just call the right initialize method

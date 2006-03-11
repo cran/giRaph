@@ -7,6 +7,7 @@
 
 \alias{initialize,edgeList-method}
 \alias{show,edgeList-method}
+\alias{showRel,edgeList,vertexSet-method}
 \alias{areTheSame,edgeList,edgeList-method}
 \alias{isPresent,edge,edgeList-method}
 \alias{[,edgeList-method}
@@ -15,6 +16,7 @@
 \alias{-,edgeList,edge-method}
 \alias{maxId,edgeList-method}
 \alias{recode,edgeList,vertexSet,vertexSet-method}
+\alias{coerce,list,edgeList-method}
 
 \title{Class "edgeList"}
 
@@ -38,7 +40,9 @@ Class \code{"vector"}, by class \code{"list"}.
 \section{Methods}{
   \describe{
     \item{initialize}{\code{signature(.Object = "edgeList")}: constructs a multi-set of edges from a list of edges}
-    \item{show}{\code{signature(object = "edgeList")}: dispalys a multi-set of edges in graph brackets}
+    \item{show}{\code{signature(object = "edgeList")}: dispalys a multi-set of edges in graph brackets (numeric codes)}
+    \item{showRel}{\code{signature(object = "edgeList",code="vertexSet")}:
+	  dispalys a multi-set of edges in graph brackets (character names}
     \item{areTheSame}{\code{signature(x = "edgeList", y = "edgeList")}:
 	  x and y are the same multi-set of edges if they contain the same edges with the same multiplicity}
     \item{isPresent}{\code{signature(el = "edge", ou = "edgeList")}:
@@ -50,6 +54,7 @@ Class \code{"vector"}, by class \code{"list"}.
 	\item{maxId}{\code{signature(x="edgeList")}: gets the maximum numeric identifier of a multi-set of edges}
     \item{recode}{\code{signature(object = "edgeList",src="vertexSet",dst="vertexSet")}:
 	  recodes a multi-sets of edges by making the numbers of its edges refer to another \code{"vertexSet"} object}
+    \item{coerce}{\code{signature(from = "list", to = "edgeList")}: constructs a multi-set of edges from list input}
   }
 }
 

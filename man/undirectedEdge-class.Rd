@@ -7,6 +7,7 @@
 
 \alias{initialize,undirectedEdge-method}
 \alias{show,undirectedEdge-method}
+\alias{showRel,undirectedEdge,vertexSet-method}
 \alias{areTheSame,undirectedEdge,undirectedEdge-method}
 \alias{areTheSame,undirectedEdge,edge-method}
 \alias{areTheSame,edge,undirectedEdge-method}
@@ -44,6 +45,8 @@ Class \code{"numeric"}, by class \code{"integer"}.
 	  constructs an undirected edge from a vector of strictly positive integers}
 	\item{show}{\code{signature(object = "undirectedEdge")}:
 	  displays an undirected edge as numbers joined by lines}
+	\item{showRel}{\code{signature(object = "undirectedEdge",code="vertexSet")}:
+	  displays an undirected edge as names joined by lines}
     \item{areTheSame}{\code{signature(x = "undirectedEdge", y = "undirectedEdge")}:
 	  x and y are the same undirected edge if they are the same set of numbers}
     \item{areTheSame}{\code{signature(x = "undirectedEdge", y = "edge")}:

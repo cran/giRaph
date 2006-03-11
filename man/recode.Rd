@@ -5,14 +5,14 @@
 
 \title{Function to recode an object from a given source code to a given target code}
 
-\description{Recode an object from a given source code to a given target code}
+\description{Recodes an object from a given source code to a given target code}
 
 \usage{recode(object, src, dst)}
 
 \arguments{
   \item{object}{ an object to be recoded }
-  \item{src}{ source code object}
-  \item{dst}{ target code object }
+  \item{src}{ an object containing the source code }
+  \item{dst}{ an object containing the target code }
 }
 
 \details{The function \code{recode} is generic.}

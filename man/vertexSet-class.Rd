@@ -12,6 +12,7 @@
 \alias{coerce,vector,vertexSet-method}
 \alias{names,vertexSet-method}
 \alias{+,vertexSet,vertexSet-method}
+\alias{*,vertexSet,vertexSet-method}
 \alias{-,vertexSet,vertexSet-method}
 
 \title{Class "vertexSet"}
@@ -47,6 +48,7 @@ Class \code{"vector"}, by class \code{"character"}.
     \item{coerce}{\code{signature(from = "vector", to = "vertexSet")}: constructs a vertex set from vector input}
     \item{names}{\code{signature(x = "vertexSet")}: gets the character vertex identifiers}
     \item{+}{\code{signature(e1 = "vertexSet", e2 = "vertexSet")}: performs the union of two vertex sets}
+    \item{*}{\code{signature(e1 = "vertexSet", e2 = "vertexSet")}: performs the intersection of two vertex sets}
     \item{-}{\code{signature(e1 = "vertexSet", e2 = "vertexSet")}: performs the asymmetric difference of two vertex sets}
   }
 }

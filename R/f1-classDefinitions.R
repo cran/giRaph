@@ -2,8 +2,8 @@
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Tue Nov 30 13:35:00 2004
 ## Last Modified By: Luca La Rocca
-## Last Modified On: Sat Jun 25 10:00:00 2005
-## Update Count    : 3
+## Last Modified On: Sat Feb 25 16:30:00 2006
+## Update Count    : 4
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -54,9 +54,9 @@ setClass("incidenceMatrix", contains="matrix")
 
 # class for an adjacency list
 setClass("adjacencyList", contains="list")
-# 'A[[i]]$ne' is a vector of strictly positive integers indicating the neighbours of 'i'
-# 'A[[i]]$pa' is a vector of strictly positive integers indicating the parents of 'i'
-# 'A[[i]]$ch' is a vector of strictly positive integers indicating the children of 'i'
+# 'A@.Data[[i]]$ne' is a vector of strictly positive integers indicating the neighbours of 'i'
+# 'A@.Data[[i]]$pa' is a vector of strictly positive integers indicating the parents of 'i'
+# 'A@.Data[[i]]$ch' is a vector of strictly positive integers indicating the children of 'i'
 
 # class for an adjacency matrix
 setClass("adjacencyMatrix", contains="matrix")

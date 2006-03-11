@@ -1,9 +1,9 @@
 ## f5-conversions.R --- 
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Fri Jun 24 10:55:00 2005
-## Last Modified By: Claus Dethlefsen
-## Last Modified On: Sat Sep 17 08:00:02 2005
-## Update Count    : 6
+## Last Modified By: Luca La Rocca
+## Last Modified On: Sat Feb 25 16:23:00 2006
+## Update Count    : 17
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -27,30 +27,30 @@
 ### typecasting from 'incidenceList' to 'incidenceMatrix'
 setAs("incidenceList", "incidenceMatrix", function(from,to) {
   
-  Vnames <- names(from)
-  n <- length(Vnames)
-  E <- from@E
-  m <- length(E)
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
   
-  I <- matrix(0, ncol = n,nrow=m)
-  colnames(I) <- Vnames
-  
-  if (m>0) {
-    counter <- 1
-    for (e in 1:m) {
-      edge <- E[[e]]
-      if (is(edge,"undirectedEdge")&&!isEmpty(edge)){
+  I <- matrix(0, ncol = n, nrow = m)
+
+  counter<-1 # counts edges kept (plus one)
+  if (m>0) { # there are edges
+    for (e in 1:m) { # for all edges
+      edge <- from@E[[e]]
+      if (is(edge,"undirectedEdge")&&!isEmpty(edge)){ # undirected and non-empty edge
           I[counter, edge@.Data ] <- 1
           counter <- counter + 1
-      } else if (is(edge,"directedEdge")&&length(edge)>1) {
-          I[counter, unlist(edge) ] <- rep(1:length(edge),unlist(lapply(edge,length)))
+      } else if (is(edge,"directedEdge")&&length(edge)>1) { # directed and proper edge
+          I[counter, unlist(edge@.Data) ] <- rep(1:length(edge),unlist(lapply(edge@.Data,length)))
           counter <- counter + 1
-      } ## else do nothing (other types of edge are ignored)
-    } # end of for '(e in 1:m)'
-    if (counter==1) return(new(to,I[-(1:m),]))
-    else if (counter==2) return(matrix(I[1,],nrow=1,ncol=n))
-    else return(new(to,I[1:(counter-1),]))
-  } # end of 'if(m>0)'
+      } ## else do nothing (empty undirected edges, improper directed edges and other types of edge are ignored)
+    } # end of for
+  } # end of if
+  
+  if(counter==1){ # no edges (kept)
+    colnames(I) <- names(from)
+  }else{
+    I<-matrix(I[seq(1,counter-1),],nrow=counter-1,ncol=n,dimnames=list(NULL,names(from)))
+  } # end of if-else
   
   return(new(to,I))
 })
@@ -59,30 +59,28 @@ setAs("incidenceList", "incidenceMatrix", function(from,to) {
 ### typecasting from 'incidenceList' to 'adjacencyList'
 setAs("incidenceList","adjacencyList", function(from,to) {
 
-  Vnames <- names(from)
-  n <- length(Vnames)
-  E <- from@E
-  m <- length(E)
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
 
-  A <- new("adjacencyList",id=Vnames)
+  A <- new(to,id=names(from))
 
-  if (m>0) {
-    for (h in 1:m) {
-      edge <- E[[h]]
-      q <- length(unlist(edge))
+  if (m>0) { # there are edges
+    for (h in 1:m) { # for all edges
+      edge <- from@E[[h]]
       if (is(edge,"undirectedEdge")){
-          if (q==2) {
-              A[[edge@.Data[1]]]$ne[length(A[[edge@.Data[1]]]$ne)+1] <- edge@.Data[2]
-              A[[edge@.Data[2]]]$ne[length(A[[edge@.Data[2]]]$ne)+1] <- edge@.Data[1]
-          } else if (q==1){
-              A[[edge@.Data[1]]]$ne[length(A[[edge@.Data[1]]]$ne)+1] <- edge@.Data[1]
+          q <- card(edge)
+          if (q==2) { # (non-empty) ordinary (non-loop) edge
+              A@.Data[[edge@.Data[1]]]$ne[length(A@.Data[[edge@.Data[1]]]$ne)+1] <- edge@.Data[2]
+              A@.Data[[edge@.Data[2]]]$ne[length(A@.Data[[edge@.Data[2]]]$ne)+1] <- edge@.Data[1]
+          } else if (q==1){ # loop
+              A@.Data[[edge@.Data[1]]]$ne[length(A@.Data[[edge@.Data[1]]]$ne)+1] <- edge@.Data[1]
           } # end of "undirected edge"
       } else if (is(edge,"directedEdge")&&length(edge)>1) {
-          if (q==2) {
-            A[[edge@.Data[[1]]]]$ch[length(A[[edge@.Data[[1]]]]$ch)+1] <- edge@.Data[[2]]
-            A[[edge@.Data[[2]]]]$pa[length(A[[edge@.Data[[2]]]]$pa)+1] <- edge@.Data[[1]]
+          if ( length(edge)>=2 && card(edge)<=2 ) { # proper ordinary edge
+            A@.Data[[edge@.Data[[1]]]]$ch[length(A@.Data[[edge@.Data[[1]]]]$ch)+1] <- edge@.Data[[2]]
+            A@.Data[[edge@.Data[[2]]]]$pa[length(A@.Data[[edge@.Data[[2]]]]$pa)+1] <- edge@.Data[[1]]
           } # end of "directed edge"
-      } ## else do nothing (other types of edge are ignored)
+      } ## else do nothing
     } # end of 'for (h in 1:m)'
   } # end of 'if(m>0)'
   
@@ -93,26 +91,23 @@ setAs("incidenceList","adjacencyList", function(from,to) {
 ### typecasting from 'incidenceList' to 'adjacencyMatrix'
 setAs("incidenceList", "adjacencyMatrix", function(from, to) {
 
-  Vnames <- names(from)
-  n <- length(Vnames)
-  E <- from@E
-  m <- length(E)
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
+
+  X <- matrix(0, ncol = n, nrow = n)
+  dimnames(X) <- list(names(from),names(from))
   
-  X <- matrix(0, ncol = n, nrow=n)
-  dimnames(X) <- list(Vnames, Vnames)
-  
-  if (m>0){
-    for (i in 1:m) {
-      edge <- E[[i]]
-      q <- length(unlist(edge))
+  if (m>0){ # there are edges
+    for (i in 1:m) { # for all edges
+      edge <- from@E[[i]]
       if (is(edge,"undirectedEdge")){
-        if (q==2){
-          X[edge[[1]],edge[[2]]] <- 1
-          X[edge[[2]],edge[[1]]] <- 1
+        if (card(edge)==2){
+          X[edge@.Data[[1]],edge@.Data[[2]]] <- 1
+          X[edge@.Data[[2]],edge@.Data[[1]]] <- 1
         } # end of "undirected edge"
       } else if (is(edge,"directedEdge")&&length(edge)>1){
-        if (q==2){
-          X[edge[[1]],edge[[2]]] <- 1
+        if (card(edge)==2){
+          X[edge@.Data[[1]],edge@.Data[[2]]] <- 1
         } # end of "directed edge"
       } ## else do nothing (hyperedges are ignored)
         ## note that multiple edges are reduced to a single edge
@@ -131,17 +126,16 @@ setAs("incidenceList", "adjacencyMatrix", function(from, to) {
 ### typecasting from 'incidenceMatrix' to 'incidenceList'
 setAs("incidenceMatrix", "incidenceList", function(from,to) {
 
-  Vnames <- names(from)
-  n <- length(Vnames)
-  m <- nrow(from)
-  
-  if(n==0) return(new("incidenceList")) # empty
-  
-  E <- list(NA,m)
-    
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
+
+  if(n==0) return(new(to)) # empty representation
+
+  E <- as(rep(NA,m),"list")
+
   if (m>0) {
       for (i in 1:m) {
-          edge <- from[i,]
+          edge <- from@.Data[i,]
           edgeorder <- edge[!edge==0]
           if (all(edgeorder==1))
               E[[i]] <- new("undirectedEdge",(1:n)[!edge==0])
@@ -155,7 +149,7 @@ setAs("incidenceMatrix", "incidenceList", function(from,to) {
       } # end of 'for (i in 1:m)'
   } # end of 'if (m>0)'
   
-  return(new("incidenceList",V=Vnames,E=E))
+  return(new(to,V=names(from),E=E))
 
 })
 # an 'incidenceList' object is returned
@@ -163,31 +157,30 @@ setAs("incidenceMatrix", "incidenceList", function(from,to) {
 ### typecasting from 'incidenceMatrix' to 'adjacencyList'
 setAs("incidenceMatrix", "adjacencyList", function(from,to){
 
-  Vnames <- names(from)
-  n <- length(Vnames)
-  m <- nrow(from)
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
   
-  A <- new("adjacencyList",id=Vnames)
+  A <- new(to,id=names(from))
 
-  if(m>0){
-      for (i in 1:m) {
-        edge <- from[i,]
+  if(m>0){ # there are edges
+      for (i in 1:m) { # for all edges
+        edge <- from@.Data[i,]
         edgeorder <- edge[!edge==0] 
         q <- length(edgeorder)
         if (all(edgeorder==1)) { # "undirected edge"
               edge <- (1:n)[edge!=0]
-              if (q==2) {
-                A[[ edge[1] ]]$ne <- c(A[[ edge[1] ]]$ne, edge[2])
-                A[[ edge[2] ]]$ne <- c(A[[ edge[2] ]]$ne, edge[1])
-              } else if (q==1) {
-                A[[ edge[1] ]]$ne <- c(A[[ edge[1] ]]$ne, edge[1])
+              if (q==2) { # (non-empty) ordinary (non-loop) edge
+                A@.Data[[ edge[1] ]]$ne <- c(A@.Data[[ edge[1] ]]$ne, edge[2])
+                A@.Data[[ edge[2] ]]$ne <- c(A@.Data[[ edge[2] ]]$ne, edge[1])
+              } else if (q==1) { # loop
+                A@.Data[[ edge[1] ]]$ne <- c(A@.Data[[ edge[1] ]]$ne, edge[1])
               } # end of if-else
         } else { # "directed edge"
-              if (q==2) {
+              if (q==2) { # proper ordinary edge
                 start <- (1:n)[edge==1]
                 end   <- (1:n)[edge==2]
-                A[[ start ]]$ch <- c(A[[ start ]]$ch, end)
-                A[[ end ]]$pa   <- c(A[[ end ]]$pa, start)
+                A@.Data[[ start ]]$ch <- c(A@.Data[[ start ]]$ch, end)
+                A@.Data[[ end ]]$pa   <- c(A@.Data[[ end ]]$pa, start)
               } # end of if
         } # end of if-else
       } # end of 'for (i in 1:m)'
@@ -200,16 +193,15 @@ setAs("incidenceMatrix", "adjacencyList", function(from,to){
 ### typecasting from 'incidenceMatrix' to 'adjacencyMatrix'
 setAs("incidenceMatrix", "adjacencyMatrix", function(from,to) {
 
-  Vnames <- names(from)
-  n <- length(Vnames)
-  m <- nrow(from)
+  n <- card(from)$v # number of vertices
+  m <- card(from)$e # number of edge occurrences
   
-  X <- matrix(0,nrow=n,ncol=n)
-  dimnames(X) <- list(Vnames,Vnames)
+  X <- matrix(0, nrow = n, ncol = n)
+  dimnames(X) <- list(names(from),names(from))
   
-  if (m>0) {
-    for (i in 1:m) {
-      edge <- from[i,]
+  if (m>0) { # there are edges
+    for (i in 1:m) { # for all edges
+      edge <- from@.Data[i,]
       if (sum(edge)==3) # "directed edge"
           X[edge==1,edge==2] <- 1
       else if (sum(edge)==2) { # "undirected edge"
@@ -220,7 +212,7 @@ setAs("incidenceMatrix", "adjacencyMatrix", function(from,to) {
     } # end of 'for (i in 1:m)'
   } # end of 'if(m>0)'
   
-  return(new("adjacencyMatrix",X))
+  return(new(to,X))
 })
 # an 'adjacencyMatrix' object is returned
 
@@ -231,57 +223,49 @@ setAs("incidenceMatrix", "adjacencyMatrix", function(from,to) {
 ### typecasting from 'adjacencyList' to 'incidenceList'
 setAs("adjacencyList","incidenceList", function(from,to) {
 
-  A <- from
-  Vnames <- names(A)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
   
   if(n==0) # empty
-      return(new("incidenceList"))
+      return(new(to))
   else{ # not empty
       E <- list()
-      for(i in 1:n){
-          a <- A[[i]]
-          if (length(a$ne[a$ne>=i])>0)
-              for (j in a$ne[a$ne>=i])
-                  E[[length(E)+1]] <- new("undirectedEdge",i,j)
-          if (length(a$ch)>0)
-              for (j in a$ch)
-                  E[[length(E)+1]] <- new("directedEdge",i,j)
+      for(i in 1:n){ # for all vertices
+          a <- from@.Data[[i]]
+          if (length(a$ne[a$ne>=i])>0) for (j in a$ne[a$ne>=i])
+            E[[length(E)+1]] <- new("undirectedEdge",i,j)
+          if (length(a$ch)>0) for (j in a$ch)
+            E[[length(E)+1]] <- new("directedEdge",i,j)
       } # end of for
-
-  return(new("incidenceList",V=Vnames,E=E))
+  return(new(to,V=names(from),E=E))
   } # end of if-else
+
 })
 # an 'incidenceList' object is returned
 
 ### typecasting from 'adjacencyList' to 'incidenceMatrix'
 setAs("adjacencyList", "incidenceMatrix", function(from,to) {
 
-  A <- from
-  Vnames <- names(A)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
 
   aux <- list()
   
   if(n>0){ # not empty
       for(i in 1:n){
-          a <- A[[i]]
-          if (length(a$ne[a$ne>=i])>0)
-              for (j in a$ne[a$ne>=i])
-                  aux[[length(aux)+1]] <- c(i,j) # undirected edge
-          if (length(a$ch)>0)
-              for (j in a$ch)
-                  aux[[length(aux)+1]] <- list(i,j) # directed edge
+          a <- from@.Data[[i]]
+          if (length(a$ne[a$ne>=i])>0) for (j in a$ne[a$ne>=i])
+            aux[[length(aux)+1]] <- c(i,j) # undirected edge
+          if (length(a$ch)>0) for (j in a$ch)
+            aux[[length(aux)+1]] <- list(i,j) # directed edge
       } # end of for
   } # end of if
 
   m<-length(aux)
   
-  I <- matrix(0, ncol = n,nrow=m)
-  colnames(I) <- Vnames
+  I <- matrix(0, ncol = n, nrow = m)
+  colnames(I) <- names(from)
 
-  if(m>0){
-      for(e in 1:m){
+  if(m>0){ # there are edges
+      for(e in 1:m){ # for all edges
           edge<-aux[[e]]
           if(is(edge,"list")){ # directed edge
               I[e,edge[[1]]]<-1
@@ -299,16 +283,14 @@ setAs("adjacencyList", "incidenceMatrix", function(from,to) {
 ### typecasting from 'adjacencyList' to 'adjacencyMatrix'
 setAs("adjacencyList","adjacencyMatrix", function(from, to) {
 
-  A <- from
-  Vnames <- names(A)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
 
-  X <- matrix(0, ncol = n, nrow=n)
-  dimnames(X) <- list(Vnames, Vnames)
+  X <- matrix(0, ncol = n, nrow = n)
+  dimnames(X) <- list( names(from), names(from))
 
   if(n>0){ # not empty
       for(i in 1:n){
-          a <- A[[i]]
+          a <- from@.Data[[i]]
           if (length(a$ne[a$ne>i])>0)
               for (j in a$ne[a$ne>i]){ # undirected edges
                   X[i,j]<-1
@@ -331,51 +313,47 @@ setAs("adjacencyList","adjacencyMatrix", function(from, to) {
 ### typecasting from 'adjacencyMatrix' to 'incidenceList'
 setAs("adjacencyMatrix","incidenceList", function(from,to) {
 
-  X<-from
-  Vnames <- names(X)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
 
   E<-list()
 
   if(n>1){ # maybe there are edges
   for(i in seq(1,n-1)){
           for(j in seq(i+1,n)){
-              if(X[i,j]){ # edge
-                  if(X[j,i]){ # undirected
+              if(from@.Data[i,j]){ # edge
+                  if(from@.Data[j,i]){ # undirected
                       E[[length(E)+1]]<-new("undirectedEdge",i,j)
                   }else{ # directed edge
                       E[[length(E)+1]]<-new("directedEdge",i,j)
                   } # end of if-else
-              } else if (X[j,i]){ # directed
+              } else if (from@.Data[j,i]){ # directed
                   E[[length(E)+1]]<-new("directedEdge",j,i)
               } # end of if-else
           } # end of for (j)
       } # end of for (i)
   } # end of if
   
-  new(to,V=Vnames,E=E)
+  new(to,V=names(from),E=E)
 })
 # an 'incidenceList' object is returned
 
 ### typecasting from 'adjacencyMatrix' to 'incidenceMatrix'
 setAs("adjacencyMatrix", "incidenceMatrix", function(from,to) {
   
-  X<-from
-  Vnames <- names(X)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
   
   aux <- list()
   
   if(n>1){ # maybe there are edges
   for(i in seq(1,n-1)){
           for(j in seq(i+1,n)){
-              if(X[i,j]){ # edge
-                  if(X[j,i]){ # undirected
+              if(from@.Data[i,j]){ # edge
+                  if(from@.Data[j,i]){ # undirected
                       aux[[length(aux)+1]]<-c(i,j)
                   }else{ # directed edge
                       aux[[length(aux)+1]]<-list(i,j)
                   } # end of if-else
-              } else if (X[j,i]){ # directed
+              } else if (from@.Data[j,i]){ # directed
                   aux[[length(aux)+1]]<-list(j,i)
               } # end of if-else
           } # end of for (j)
@@ -384,11 +362,11 @@ setAs("adjacencyMatrix", "incidenceMatrix", function(from,to) {
 
   m<-length(aux)
   
-  I <- matrix(0, ncol = n,nrow=m)
-  colnames(I) <- Vnames
+  I <- matrix(0, ncol = n, nrow = m)
+  colnames(I) <- names(from)
 
-  if(m>0){
-      for(e in 1:m){
+  if(m>0){ # there are edges
+      for(e in 1:m){ # for all edges
           edge<-aux[[e]]
           if(is(edge,"list")){ # directed edge
               I[e,edge[[1]]]<-1
@@ -406,35 +384,29 @@ setAs("adjacencyMatrix", "incidenceMatrix", function(from,to) {
 ### typecasting from 'adjacencyMatrix' to 'adjacencyList'
 setAs("adjacencyMatrix","adjacencyList", function(from, to) {
 
-  X<-from
-  Vnames <- names(X)
-  n <- length(Vnames)
+  n <- card(from)$v # number of vertices
   
-#  A <- rep(list(list()),n)
-#  names(A) <- Vnames
-  
-  A <- new("adjacencyList",id=Vnames)
+  A <- new(to,id=names(from))
   
   if(n>1){ # maybe there are edges
   for(i in seq(1,n-1)){
           for(j in seq(i+1,n)){
-              if(X[i,j]){ # edge
-                  if(X[j,i]){ # undirected
-                      A[[i]]$ne[length(A[[i]]$ne)+1]<-j
-					  A[[j]]$ne[length(A[[j]]$ne)+1]<-i
+              if(from@.Data[i,j]){ # edge
+                  if(from@.Data[j,i]){ # undirected
+                      A@.Data[[i]]$ne[length(A@.Data[[i]]$ne)+1]<-j
+					  A@.Data[[j]]$ne[length(A@.Data[[j]]$ne)+1]<-i
                   }else{ # directed edge
-				      A[[i]]$ch[length(A[[i]]$ch)+1]<-j
-				      A[[j]]$pa[length(A[[j]]$pa)+1]<-i
+				      A@.Data[[i]]$ch[length(A@.Data[[i]]$ch)+1]<-j
+				      A@.Data[[j]]$pa[length(A@.Data[[j]]$pa)+1]<-i
                   } # end of if-else
-              } else if (X[j,i]){ # directed
-				      A[[i]]$pa[length(A[[i]]$pa)+1]<-j
-				      A[[j]]$ch[length(A[[j]]$ch)+1]<-i
+              } else if (from@.Data[j,i]){ # directed
+				      A@.Data[[i]]$pa[length(A@.Data[[i]]$pa)+1]<-j
+				      A@.Data[[j]]$ch[length(A@.Data[[j]]$ch)+1]<-i
               } # end of if-else
           } # end of for (j)
       } # end of for (i)
   } # end of if
 
   return((A))
-#  return(new(to,A))
   })
 # an 'adjacencyList' object is returned

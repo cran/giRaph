@@ -1,1 +1,220 @@
-0.0.0.10* documented display and dynamic.Graph* fixed the 'display' function so that isolated nodes are shown  correctly. The maintainer of mathgraph no longer responds to CRAN,  so the package disappeared when R 2.0.0 was launched. Now, Claus is  the maintainer of mathgraph and it has re-appeared.* fixed the conversion setAs("adjacencyMatrix","adjacencyList",  function(from, to) since it returned an empty adjacencyList.0.0.0.9* developed documentation for graph classes ('anyGraph','generalGraph','multiGraph','simpleGraph')* changes to documentation for representation methods and classes:	developed documentation for classes 'adjacencyList', 'adjacencyMatrix', 'incidenceList' and 'incidenceMatrix'		improved documentation for 'adjacencyList', 'adjacencyMatrix', 'incidenceList' and 'incidenceMatrix' (get/set)* introduced 'maxId' generic function and methods for 'undirectedEdge', 'directedEdge' and 'edgeList' (with documentation)	so that it is possible to check the meaningfulness of an edge in a vertex set "transparently" with respect to the edge kind*  reviewed "f7-operators.R" so that all representation '+/-' vertex set/edge methods are now defined*  moved 'dynamicGraph' and 'display' generic definitions    from "f8-interfaces.R" to "f2-genericFunctions.R"*  deleted "f99-rm.R" by moving single line of code to "f2-genericFunctions.R"* "f5-conversions.R"	changed typecasting from 'incidenceMatrix' to 'adjacencyList'	to comply with new 'adjacencyList' constructor		changed typecasting from 'incidenceList' to 'adjacencyList'	to comply with new 'adjacencyList' constructor		removed old 'reverseEdge' case when converting from 'incidenceList'*  created "f5-conversions.R" with typecasting methods taken from "f4-representations.R"* "f5-graphs.R" renamed "f6-graphs.R"* "f6-equal.R" deleted by moving comparison methods to "f4-representations.R"* "f4-representations.R"	implemented constructor methods for classes 'adjacencyList' and 'adjacencyMatrix'			implemented multiple extractor methods for classes 'incidenceList' and 'adjacencyList'	(extracting induced subgraphs) and single extractor for 'incidencList' (vertex name)	deleted the 'recode' method for class 'adjacencyList' and changed 'areTheSame' for class	'adjacencyList' accordingly, i.e. using the multiple extractor together with names matching* changes to documentation for vertex and edge related classes:      moved documentation for 'areTheSame-methods' to relevant classes   (i.e. first non virtual argument, with the exception of typecasting)      developed documentation for 'directedEdge-class',   'edge-class', 'edgeList-class', 'undirectedEdge-class'   and 'vertexSet-class'* 'isElement(el,set)' was changed to 'isPresent(el,ou)'	and the documentation was changed accodingly* the 'recode' method is now exported	(and arguments 'from' and 'to' were changed to 'src' and 'dst',		also changing the documentation accordingly)* 'union', 'intersect' and 'setdiff' methods were removed,    	the first and the latter being replaced by +/- for vertex sets* the 'names' method is now exported* the description field in the description file was slightly changed * some "commented away" lines of code were removed,   some method definitions were reordered      and some comments were (hopefully) improved0.0.0.8* name changed from 'giRaf' to 'giRaph'* changes to documentation:         merged and developed documentation for retrieving and setting graph representations      developed documentation for 'areTheSame' generic function      merged and developed documentation for 'v', 'u', 'd' and 'r' shorthands      developed documentation for 'isEmpty' generic function* restricted namespace* revised directory structure* commented out the tail of 'tst.R' (the whole file should be checked thouroghly as soon as possible)* added 'dd.R' with "complex enough" working example* added "f0-onLoad.R" according to   "Writing R Extensions" (page 15)* "f2-genericFunctions.R"    	Made replacement method definitions "compliant" with usual formula.* "f3-vertexAndEdge.R"        Changed 'areTheSame' method for class 'edgeList'    in order to make it more efficient (no more list subsetting, but use of an	auxiliary variable to remove matched elements).    	Changed 'show' method for class 'edgeList'    having multisets and incidence lists in mind.        Changed 'show' method for class 'undirectedEdge' (new loop notation).* "f4-representations.R"        Added 'recode' method for class 'adjacencyList'    from "vertexSet" to "vertexSet".        Added 'show' method for class 'incidenceList'.        Changed 'show' method for class 'adjacencyList'    so that it shows vertex names instead of numbers.        Added "robust" constructor for class 'incidenceMatrix'.*  "f6-equal.R"        Added 'areTheSame' method for classes 'incidenceMatrix'    and 'adjacencyList' and 'adjacencyMatrix'.0.0.0.7:* incidenceList + v() now works again.* dynamic.Graph now works again.* plot (using mathgraph) is renamed to 'display' due to complaints   from the R CMD check.* The test example in anygraph-class.Rd works again.   (but some stuff is commented out).* "f2-genericFunctions.R". Added 'recode' generic funcion definition.   It is intended to be for edges, to change their numbering from one   vertex set to another one.* "f3-vertexAndEdge.R": Added 'recode' method for classes   'undirectedEdge', 'directedEdge' and 'edgeList'.   Added 'areTheSame' method for class 'undirectedEdge' versus class   'edge' (and viceversa) as well as for class 'directedEdge' versus   'edge' (and viceversa).  Now a directed edge can be safely compared   with an undirected one, always being different.* "f4-representations.R": Revised constructor for class   'incidenceList' dropping only those edges whose numbering exceeds the   cardinality of the vertex set. Other constructors for   representations still missing... * "f6-equal.R": Deleted "identical" generic definition.  In case, it   should be resurrected in file "f2-genericFunctions.R" and not here.   Added 'areTheSame' method for class 'incidenceList';   methods for other representations still missing...   Deleted the "quick and dirty implementation" of 'identical' method for class 'anyGraph',      in view of implementing the 'areTheSame' methods for graphs...   Commented out 'whichEdge' and 'matchingLists' as it seems to me that   they are no longer used.* "f99-rm-R": Now it checks whether 'fun' exists before   removing it, so that no warning is given if   run when all generics are already defined.0.0.0.6: * Substantial restructure: Files "f1-vertexClasses.R",  "f2-edgeClasses.R", "f3-classDef.R", "f4-graphs.R" and  "f5-representations.R" replaced by the following ones   * "f1-classDefinitions.R": Now all class definitions are given  here. In particular, classes "vertexSet" (old "vertex"), "edge"   (virtual), "undirectedEdge", "directedEdge" and "edgeList" are now  defined here, together with the representation classes  "incidenceList", "incidenceMatrix", "adjacencyList" and  "adjacencyMatrix" and the graph classes "anyGraph", "generalGraph",  "multiGraph" and "simpleGraph".    About the class "vertexSet": it now inherits from 'character', as I   eventually stuck to "valid names" identifiers. Note that I dropped   the idea of storing these in lexicographical order, as I realised that   it could be confusing when extractor methods are used, it could be a   limitation when using 'integer' identifiers for edges and it would   imply an ordered 'incidenceList' representation, thus probably forcing   us to the complication of keeping in order all the   representations. The mathematical entity represented is a set of vertices.   About the classes "undirectedEdge" and "directedEdge": they now have   strictly positive 'integer' elements, which should be thought of as   referring to a 'vertexSet' object. The mathematical entities   represented are a subset of vertices and a partially ordered subset of   vertices respectively.   About the class "edgeList": the mathematical entity represented is a   multiset of edges.   About the class "reverseEdge": I dropped it, as I think it's currently   more a source of confusion than a flexible tool. I kept, however, the   function "r" which is now a wrapper for building a directed edge "the   other way round", that is having "reverted" the input.   About the class "vertexList": I dropped it as it seems to me that it   is not currently needed.  I think it could be useful in the future to   represent partially ordered set of vertices.   About the class "incidenceList": I dropped the 'vertexCount' stuff, as   I realised that always having names for the vertices is probably the   only way to be able to understand if two graph objects represent the   same mathematical entity (without resorting to isomorphisms, which   however constitute a somewhat different matter).  Furthermore, I   changed the slot names from "vertexList" and "edgeList" to "V" and   "E". The first one was almost unavoidable, as it is no longer a   'vertexList', and together with the second one gives us the nice   "G=(V,E)" for an object "G" of this class.      Finally, I have commented out the "special classes" as we are not using   them and I thought it was worth not introducing them until they are needed.* "f2-genericFunctions.R": Now all generic function definitions are   given here (unless there are spare ones in f6, f7 and f8).   Note a couple of 'isEmpty' methods for classes which are not      introduced by us (i.e. "NULL" and "vector").   Also note the generic function 'areTheSame' which is intended to check   whether the mathematical entities represented are the same. This is   somewhat intermediate between the idea of isomorphism, which involves   different but equivalent mathematical entities, and the 'identity'   function, which keeps into account storage details (e.g. order). I   think we should implement the 'areTheSame' method for all our classes   and use it for the notion of "being equal". Consequently, the old generic      function 'areIso' has been dropped for now, although it could be "resurrected"      in the future if we really want to focus our attention on isomorphisms.* "f3-vertexAndEdge.R": Here are the methods for vertex and edge classes    ("vertexSet","undirectedEdge","directedEdge","edgeList").* "f4-representations.R": Here are the methods for representation   classes ("incidenceList", "incidenceMatrix", "adjacencyList",   "adjacencyMatrix") and in particular the converters. I run through all   of them and now all conversions are done in a single step.* "f5-graphs.R" Here are the methods for graph classes ("anyGraph",   "generalGraph", "multiGraph", "simpleGraph") and in particular the   methods for getting and setting representations, as well as the   typecasting methods. Note that the methods for setting representations   will be working with "force=F" as soon as the 'areTheSame' methods for   representations will be implemented.0.0.0.4: * removed f0-require.R. This is obsolete in R-2.0.0 since we now use   the Depends field in DESCRIPTION.0.0.0.3: * Empty changed to isEmpty.* implemented a 'makeIDnum' method for edge classes that converts  'character' identifiers to 'integer' identifiers according to a    given "table" (of class 'vertex' or 'vertexList') *  using the above, implemented a (hopefully) robust and flexible    constructor for class 'incidenceList'; changes to the file 'tst.R'    so that it is still working *  slightly changed the constructor for class 'vertexList'    so that 'new("vertexList",list())' no longer gives an error*  run through the 'f5-representations.R' file adding comments,    erasing old code and reviewing the conversions; in particular,    class 'reverseEdge' is now handled in 'incidenceList', explicit    names are stored if and only if they are present in the original    representation, edges like 'd(1)' and 'u()' are removed when    converting from 'incidenceList' and (hopefully) everything is    "more S4" than before* implemented a compact 'show' method for class 'adjacencyList'* mathgraph moved from 'required' to 'suggests' field in DESCRIPTION0.0.0.2:     * vertexClasses4.r is included as f1-vertexClasses.R* f8-interfaces.R has been fixed regarding plot (graphNEL still commented out)* f4-graphs.R fixed so that the replacement functions with the force argument does not give an error in R check. * Work/Tests/tst.R has been adopted to swap the arguments when replacing representations.0.0.0.1: * initial package
+
+0.0.0.18
+
+* Changed description from "Supply data structures and algorithms for computations on graphs"
+
+  to "Supply classes and methods to represent and manipulate graphs" (as in the abstract)
+
+  in order to put the emphasis on object orientation.
+
+* Changed "dd.R" to have the same commands as in the current version of the paper.
+
+0.0.0.17
+
+* Added 'card', 'isEmpty', 'isPresent' and 'areTheSame' methods for graph classes (documented).
+
+  Implemented single and multiple extractor methods for graph classes (documented).
+
+  Changed typecasting between graphs: multiple representations are preserved, if present.
+
+  Revised methods to get/set representations from graph objects.
+
+  Made sure that wrappers are not used within 'giRaph' (so that no problem can arise
+
+  if they are masked by users). Implemented (and documented) operator overloading
+
+  for graph classes (+,-,* and vertexSet/edge).
+
+* Introduced single and multiple extractor methods for classes 'incidenceMatrix'
+
+  and 'adjacencyMatrix' (documented). Also introduced single extractor method
+
+  for class 'adjacencyList' (documented). This makes uniform the set of available
+
+  methods for representation classes: initialize, show, names (names<-), card,
+
+  isEmpty, isPresent, [, [[, coerce (to other representations) and +, -, *.
+
+* Added examples from the paper to "dd.R".
+
+* Prepared code for the introduction of extractor methods for matrix representations
+
+  ('[', '[[', 'apply' and 'lapply' refer to data part '@.Data' whenever appropriate).
+
+0.0.0.16
+
+* Package 'giRaph' no longer depends on package 'dynamicGraph':
+
+  changed "DESCRIPTION", "f0-onLoad.R" and "f8-interfaces.R.
+
+* No longer methods for 'dg' in 'giRaph' (only 'dynamic.Graph' and typecasting):
+
+  changed "NAMESPACE", "f8-interfaces.R" and "testDgGiRaph.R".
+
+* Changed "f8-interfaces.R" to modify 'dynamic.Graph' behaviour for class 'generalGraph':
+
+  both directed and undirected hyper edges are expanded to ordinary edges before drawing
+
+  the picture and dashed lines are used for them (precedence goes to ordinary edges).
+
+  Also implemented typecasting from 'mathgraph' to 'simpleGraph' (up to now it was a stub)
+
+  and 'display' method for classes 'multiGraph', 'generalGraph' and 'anyGraph'
+
+  (via coercion to class 'simpleGraph').
+
+* Changed "f6-graphs.R" to implement robust constructors for graph classes (documented)
+
+  and 'names' ('names<-') methods (with documentation).
+
+  Also fixed replacement methods for representations (returned objects of wrong class
+
+  due to inheritance).
+
+* Changed "f3-vertexAndEdge.R" so that 'maxId' gives zero for empty objects.
+
+0.0.0.15
+
+* Minor changes to the 'giRaph' help page.
+
+* Changed "f7-operators.R" to implement 'incidenceList * vertexSet',
+
+  'incidenceMatrix * vertexSet', 'adjacencyList * vertexSet' and
+
+  'adjacencyMatrix * vertexSet' so as to obtain the induced sugraph (documented).
+
+  Also fixed 'incidenceList - edge', 'adjacencyMatrix - undirectedEdge'
+
+  and 'adjacencyMatrix - directedEdge' methods.
+
+* Changed "f5-conversions.R" to fix/improve representation typecasting methods.
+
+* Changed "f4-representations.R" to modify show method for incidence list
+
+  in order to visualize character names instead of numeric codes. Also added:
+
+  the 'isPresent' method for 'edge' in 'incidenceList' (documented)
+
+  for 'undirectedEdge' and 'directedEdge' in 'incidenceMatrix' (documented)
+
+  for 'undirectedEdge' and 'directedEdge' in 'adjacencyList' (documented)
+
+  for 'undirectedEdge' and 'directedEdge' in 'adjacencyMatrix' (documented);
+
+  the 'names<-' replacement method for 'incidenceList', 'incidenceMatrix'
+
+  'adjacencyList' and 'adjacencyMatrix' (documented);
+
+  the 'card' method for 'incidenceList', 'incidenceMatrix',
+
+  'adjacencyList' and 'adjacencyMatrix' (documented).
+
+  Improved 'initialize' method for class 'adjacencyList' (and changed documentation).
+
+* Changed "f3-vertexAndEdge.R" to implement:
+
+  'card' method for 'directedEdge' class (documented);
+
+  typecasting from 'list' to 'edgeList' (documented);
+
+  intersection method for two 'vertexSet' objects
+
+  by overloading the '*' operator (documented);
+
+  'showRel' method for 'undirectedEdge' relative to 'vertexSet' (documented);
+
+  'showRel' method for 'directedEdge' relative to 'vertexSet' (documented);
+
+  'showRel' method for 'edgeList' relative to 'vertexSet'(documented);
+
+  'names<-' replacement method for 'incidenceList' objects (documented);
+
+  'card' method for 'incidenceList' objects (documented).
+
+* Changed the namespace to export 'card', 'showRel' and 'names<-' methods.
+
+* Changed "f2-genericFunctions.R" to add:
+
+  'card' generic function to get the cardinality of an object
+
+  and a method for vectors returning their length (with documentation);
+
+  'showRel' generic function to show an object (edge)
+
+  relative to a given code (vertex set) with documentation;
+
+  'names<-' generic function to set the character identifiers
+
+  of an object (documented in base package).
+
+  Moreover, the check for an already exhisting function has been removed:
+
+  for such a function to work, it should contain a call to 'standardGeneric'
+
+  and thus it would have been identified by the 'isGeneric' check (anyway,
+
+  the removed check was not working... indeed checking whether 'is.function("names")'
+
+  is useless, since "names" is a 'character'... nor was the assignment to 'fun'
+
+  for replacement methods working, since something like 'fun<-get("incidenceList<-")'
+
+  would have been needed...) note that this doesn't prevent the 'names' method(s)
+
+  defined in the base package to work properly (indeed, any problem would have
+
+  appeared before, since the check for exhisting function was not working...).
+
+* Changed "f0-onLoad.R" to account for dependence
+
+  on graphics, methods and dynamicGraph packages.
+
+0.0.0.12* Changed interface to dynamicGraph pagkage.0.0.0.10* documented 'display' and 'dynamic.Graph'.* fixed the 'display' function so that isolated nodes are shown
+  correctly. The maintainer of mathgraph no longer responds to CRAN,
+
+  so the package disappeared when R 2.0.0 was launched.
+
+  Now, Claus is the maintainer of mathgraph and it has re-appeared.* fixed the conversion setAs("adjacencyMatrix","adjacencyList",
+  function(from, to) since it returned an empty adjacencyList.0.0.0.9* developed documentation for graph classes
+
+  ('anyGraph','generalGraph','multiGraph','simpleGraph')* changes to documentation for representation methods and classes:  developed documentation for classes 'adjacencyList', 'adjacencyMatrix',
+
+  'incidenceList' and 'incidenceMatrix'	  improved documentation for 'adjacencyList', 'adjacencyMatrix',
+
+  'incidenceList' and 'incidenceMatrix' (get/set)* introduced 'maxId' generic function and methods for 'undirectedEdge',
+
+  'directedEdge' and 'edgeList' (with documentation)  so that it is possible to check the meaningfulness of an edge in a vertex set
+
+  "transparently" with respect to the edge kind* reviewed "f7-operators.R" so that all representation '+/-' vertex set/edge methods
+
+  are now defined* moved 'dynamic.Graph' and 'display' generic definitions  from "f8-interfaces.R" to "f2-genericFunctions.R"* deleted "f99-rm.R" by moving single line of code to "f2-genericFunctions.R"* "f5-conversions.R"  changed typecasting from 'incidenceMatrix' to 'adjacencyList'
+  to comply with new 'adjacencyList' constructor  changed typecasting from 'incidenceList' to 'adjacencyList'
+
+  to comply with new 'adjacencyList' constructor  removed old 'reverseEdge' case when converting from 'incidenceList'*  created "f5-conversions.R" with typecasting methods taken from "f4-representations.R"* "f5-graphs.R" renamed "f6-graphs.R"* "f6-equal.R" deleted by moving comparison methods to "f4-representations.R"* "f4-representations.R"  implemented constructor methods for classes 'adjacencyList' and 'adjacencyMatrix'	  implemented multiple extractor methods for classes 'incidenceList' and 'adjacencyList'
+  (extracting induced subgraphs) and single extractor for 'incidencList' (vertex name)  deleted the 'recode' method for class 'adjacencyList' and changed 'areTheSame' for class
+  'adjacencyList' accordingly, i.e. using the multiple extractor together with names matching* changes to documentation for vertex and edge related classes:     moved documentation for 'areTheSame-methods' to relevant classes
+
+  (i.e. first non virtual argument, with the exception of typecasting)     developed documentation for 'directedEdge-class','edge-class',
+
+  'edgeList-class', 'undirectedEdge-class' and 'vertexSet-class'* 'isElement(el,set)' was changed to 'isPresent(el,ou)'  and the documentation was changed accodingly* the 'recode' method is now exported  (and arguments 'from' and 'to' were changed to 'src' and 'dst',
+
+  also changing the documentation accordingly)* 'union', 'intersect' and 'setdiff' methods were removed,  the first and the latter being replaced by +/- for vertex sets* the 'names' method is now exported* the description field in the description file was slightly changed * some "commented away" lines of code were removed,   some method definitions were reordered      and some comments were (hopefully) improved0.0.0.8* name changed from 'giRaf' to 'giRaph'* changes to documentation:         merged and developed documentation for retrieving and setting graph representations      developed documentation for 'areTheSame' generic function      merged and developed documentation for 'v', 'u', 'd' and 'r' shorthands      developed documentation for 'isEmpty' generic function* restricted namespace* revised directory structure* commented out the tail of 'tst.R' (the whole file should be checked thouroghly
+
+  as soon as possible)* added 'dd.R' with "complex enough" working example* added "f0-onLoad.R" according to "Writing R Extensions" (page 15)* "f2-genericFunctions.R"  Made replacement method definitions "compliant" with usual formula.* "f3-vertexAndEdge.R"
+  Changed 'areTheSame' method for class 'edgeList' in order to make it
+
+  more efficient (no more list subsetting, but use of an auxiliary variable
+
+  to remove matched elements).  Changed 'show' method for class 'edgeList'
+
+  having multisets and incidence lists in mind.  Changed 'show' method for class 'undirectedEdge' (new loop notation).* "f4-representations.R"
+  Added 'recode' method for class 'adjacencyList'
+  from "vertexSet" to "vertexSet".  Added 'show' method for class 'incidenceList'.
+  Changed 'show' method for class 'adjacencyList'
+  so that it shows vertex names instead of numbers.
+  Added "robust" constructor for class 'incidenceMatrix'.*  "f6-equal.R"  Added 'areTheSame' method for classes 'incidenceMatrix'
+  and 'adjacencyList' and 'adjacencyMatrix'.0.0.0.7:* incidenceList + v() now works again.* dynamic.Graph now works again.* plot (using mathgraph) is renamed to 'display' due to complaints  from the R CMD check.* The test example in anygraph-class.Rd works again.  (but some stuff is commented out).* "f2-genericFunctions.R". Added 'recode' generic funcion definition.  It is intended to be for edges, to change their numbering from one  vertex set to another one.* "f3-vertexAndEdge.R": Added 'recode' method for classes  'undirectedEdge', 'directedEdge' and 'edgeList'.  Added 'areTheSame' method for class 'undirectedEdge' versus class  'edge' (and viceversa) as well as for class 'directedEdge' versus  'edge' (and viceversa).  Now a directed edge can be safely compared   with an undirected one, always being different.* "f4-representations.R": Revised constructor for class  'incidenceList' dropping only those edges whose numbering exceeds
+
+  the cardinality of the vertex set. Other constructors for  representations still missing... * "f6-equal.R": Deleted "identical" generic definition.  In case, it  should be resurrected in file "f2-genericFunctions.R" and not here.  Added 'areTheSame' method for class 'incidenceList';  methods for other representations still missing...  Deleted the "quick and dirty implementation" of 'identical' method for class 'anyGraph',     in view of implementing the 'areTheSame' methods for graphs...  Commented out 'whichEdge' and 'matchingLists' as it seems to me that  they are no longer used.* "f99-rm-R": Now it checks whether 'fun' exists before  removing it, so that no warning is given if  run when all generics are already defined.0.0.0.6: * Substantial restructure: Files "f1-vertexClasses.R",  "f2-edgeClasses.R", "f3-classDef.R", "f4-graphs.R" and  "f5-representations.R" replaced by the following ones   * "f1-classDefinitions.R": Now all class definitions are given  here. In particular, classes "vertexSet" (old "vertex"), "edge"   (virtual), "undirectedEdge", "directedEdge" and "edgeList" are now  defined here, together with the representation classes  "incidenceList", "incidenceMatrix", "adjacencyList" and  "adjacencyMatrix" and the graph classes "anyGraph", "generalGraph",  "multiGraph" and "simpleGraph".   About the class "vertexSet": it now inherits from 'character', as I  eventually stuck to "valid names" identifiers. Note that I dropped  the idea of storing these in lexicographical order, as I realised that  it could be confusing when extractor methods are used, it could be a  limitation when using 'integer' identifiers for edges and it would  imply an ordered 'incidenceList' representation, thus probably forcing  us to the complication of keeping in order all the  representations. The mathematical entity represented is a set of vertices.  About the classes "undirectedEdge" and "directedEdge": they now have  strictly positive 'integer' elements, which should be thought of as  referring to a 'vertexSet' object. The mathematical entities  represented are a subset of vertices and a partially ordered subset of  vertices respectively.  About the class "edgeList": the mathematical entity represented is a  multiset of edges.  About the class "reverseEdge": I dropped it, as I think it's currently  more a source of confusion than a flexible tool. I kept, however, the  function "r" which is now a wrapper for building a directed edge "the  other way round", that is having "reverted" the input.  About the class "vertexList": I dropped it as it seems to me that it  is not currently needed.  I think it could be useful in the future to  represent partially ordered set of vertices.  About the class "incidenceList": I dropped the 'vertexCount' stuff, as  I realised that always having names for the vertices is probably the  only way to be able to understand if two graph objects represent the  same mathematical entity (without resorting to isomorphisms, which  however constitute a somewhat different matter).  Furthermore, I  changed the slot names from "vertexList" and "edgeList" to "V" and  "E". The first one was almost unavoidable, as it is no longer a  'vertexList', and together with the second one gives us the nice  "G=(V,E)" for an object "G" of this class.     Finally, I have commented out the "special classes" as we are not using  them and I thought it was worth not introducing them until they are needed.* "f2-genericFunctions.R": Now all generic function definitions are  given here (unless there are spare ones in f6, f7 and f8).  Note a couple of 'isEmpty' methods for classes which are not     introduced by us (i.e. "NULL" and "vector").  Also note the generic function 'areTheSame' which is intended to check  whether the mathematical entities represented are the same. This is  somewhat intermediate between the idea of isomorphism, which involves  different but equivalent mathematical entities, and the 'identity'  function, which keeps into account storage details (e.g. order). I  think we should implement the 'areTheSame' method for all our classes  and use it for the notion of "being equal". Consequently, the old generic  function 'areIso' has been dropped for now, although it could be "resurrected"  in the future if we really want to focus our attention on isomorphisms.* "f3-vertexAndEdge.R": Here are the methods for vertex and edge classes   ("vertexSet","undirectedEdge","directedEdge","edgeList").* "f4-representations.R": Here are the methods for representation  classes ("incidenceList", "incidenceMatrix", "adjacencyList",  "adjacencyMatrix") and in particular the converters. I run through all  of them and now all conversions are done in a single step.* "f5-graphs.R" Here are the methods for graph classes ("anyGraph",  "generalGraph", "multiGraph", "simpleGraph") and in particular the  methods for getting and setting representations, as well as the  typecasting methods. Note that the methods for setting representations  will be working with "force=F" as soon as the 'areTheSame' methods for  representations will be implemented.0.0.0.4: * removed f0-require.R. This is obsolete in R-2.0.0 since we now use  the Depends field in DESCRIPTION.0.0.0.3: * Empty changed to isEmpty.* implemented a 'makeIDnum' method for edge classes that converts  'character' identifiers to 'integer' identifiers according to a  given "table" (of class 'vertex' or 'vertexList') * using the above, implemented a (hopefully) robust and flexible  constructor for class 'incidenceList'; changes to the file 'tst.R'  so that it is still working * slightly changed the constructor for class 'vertexList'  so that 'new("vertexList",list())' no longer gives an error* run through the 'f5-representations.R' file adding comments,  erasing old code and reviewing the conversions; in particular,  class 'reverseEdge' is now handled in 'incidenceList', explicit  names are stored if and only if they are present in the original  representation, edges like 'd(1)' and 'u()' are removed when  converting from 'incidenceList' and (hopefully) everything is  "more S4" than before* implemented a compact 'show' method for class 'adjacencyList'* mathgraph moved from 'required' to 'suggests' field in DESCRIPTION0.0.0.2:     * vertexClasses4.r is included as f1-vertexClasses.R* f8-interfaces.R has been fixed regarding plot (graphNEL still commented out)* f4-graphs.R fixed so that the replacement functions with the force argument
+
+  does not give an error in R check. * Work/Tests/tst.R has been adopted to swap the arguments when replacing representations.0.0.0.1: * initial package

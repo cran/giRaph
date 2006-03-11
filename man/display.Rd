@@ -40,6 +40,9 @@ G<-new("incidenceList",
 
 sg <- new("simpleGraph",adjacencyMatrix=as(G,"adjacencyMatrix"))
 display(sg)
+
+gg <-new("generalGraph",incidenceList=G)
+display(gg)
 }
 
 \keyword{ graphs }
