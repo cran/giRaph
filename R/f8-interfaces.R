@@ -1,9 +1,9 @@
 ## f8-interfaces.R --- 
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Wed Nov 03 19:22:57 2004
-## Last Modified By: Luca La Rocca
-## Last Modified On: Sun Feb 26 15:16:00 2006
-## Update Count    : 96
+## Last Modified By: Claus Dethlefsen
+## Last Modified On: Thu Sep 28 14:28:01 2006
+## Update Count    : 97
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -190,7 +190,7 @@ setOldClass("mathgraph")
 setAs("simpleGraph","mathgraph",
       function(from,to){
         
-        I <- incidenceList(from)
+        I <- as(adjacencyMatrix(from), "incidenceList")
         M <- matrix( unlist(lapply(I@E,unlist)), ncol=2, byrow=TRUE)
         colnames(M) <- c("e1","e2")
         directed <- unlist(lapply(I@E,is,"directedEdge"))
