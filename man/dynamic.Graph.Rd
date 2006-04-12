@@ -46,7 +46,7 @@ G<-new("incidenceList",
       )
 
 sg <- new("simpleGraph",adjacencyMatrix=as(G,"adjacencyMatrix"))
-dynamic.Graph(sg)
+\dontrun{dynamic.Graph(sg)}
 
 G.1 <- new("incidenceList", 
            E = list(u(1, 2), d(1, 3), u(3), 
@@ -55,7 +55,7 @@ G.1 <- new("incidenceList",
            V = 5:10)
 
 ag <- new("anyGraph", incidenceList = G.1)
-dynamic.Graph(ag)
+\dontrun{dynamic.Graph(ag)}
 }
 
 \keyword{ graphs }
