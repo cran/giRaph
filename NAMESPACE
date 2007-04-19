@@ -13,4 +13,4 @@ exportMethods("initialize","show","showRel",
               "incidenceMatrix", "incidenceMatrix<-",
               "adjacencyList","adjacencyList<-",
               "adjacencyMatrix", "adjacencyMatrix<-",
-              "dynamic.Graph","display")
+              "display")

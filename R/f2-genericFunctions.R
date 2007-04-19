@@ -1,9 +1,9 @@
 ## f2-genericFunctions.R --- 
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Tue Nov 30 14:23:00 2004
-## Last Modified By: Luca La Rocca
-## Last Modified On: Fri Feb 17 12:03:00 2006
-## Update Count    : 24
+## Last Modified By: Claus Dethlefsen
+## Last Modified On: Sun Dec 17 21:38:36 2006
+## Update Count    : 26
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -15,14 +15,14 @@ if (!isGeneric("showRel")) {
 ###
 
 # getting the character identifiers of an object
-if (!isGeneric("names")) {
-    setGeneric("names",function(x) standardGeneric("names"))
-} # end of if
+#if (!isGeneric("names")) {
+#    setMethod("names",function(x) standardGeneric("names"))
+#} # end of if
 
 # setting the character identifiers of an object
-if (!isGeneric("names<-")) {
-    setGeneric("names<-",function(x,value) standardGeneric("names<-"))
-  } # end of if
+#if (!isGeneric("names<-")) {
+#    setGeneric("names<-",function(x,value) standardGeneric("names<-"))
+#  } # end of if
 
 ###
 
