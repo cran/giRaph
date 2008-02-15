@@ -1,8 +1,21 @@
+
+0.1-1
+
+* switched to suggested version numbering
+
+* re-added dynamicGraph as suggested package, since it is again available from CRAN
+
+* revised implementation of the idea that two edge objects of different type cannot represent the same edge,
+
+  in order to avoid a warning due to the new method selection procedure of R (starting from version 2.4.0)
+
+* fixed methods to get representations (in light of the new method selection procedure)
+
+* changed minimum R version to 2.4.0 (sticking to the new method selection procedure)
+
 0.0.1.3
 
 * removed dependence on dynamicGraph, since this package has not been updated.
-
-
 
 0.0.0.18
 

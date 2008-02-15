@@ -13,6 +13,9 @@
 \alias{incidenceMatrix<-,simpleGraph-method}
 \alias{adjacencyList<-,simpleGraph-method}
 \alias{adjacencyMatrix<-,simpleGraph-method}
+\alias{incidenceList,simpleGraph-method}
+\alias{incidenceMatrix,simpleGraph-method}
+\alias{adjacencyList,simpleGraph-method}
 \alias{adjacencyMatrix,simpleGraph-method}
 \alias{names,simpleGraph-method}
 \alias{names<-,simpleGraph-method}
@@ -73,6 +76,9 @@ Class \code{"anyGraph"}, directly, with explicit coerce.
     \item{incidenceMatrix<-}{\code{signature(x = "simpleGraph")}: sets the incidence matrix representation}
     \item{adjacencyList<-}{\code{signature(x = "simpleGraph")}: sets the adjacency list representation}
     \item{adjacencyMatrix<-}{\code{signature(x = "simpleGraph")}: sets the adjacency matrix representation}
+    \item{incidenceList}{\code{signature(object = "simpleGraph")}: gets the incidence list representation}
+    \item{incidenceMatrix}{\code{signature(object = "simpleGraph")}: gets the incidence matrix representation}
+    \item{adjacencyList}{\code{signature(object = "simpleGraph")}: gets the adjacency list representation}
     \item{adjacencyMatrix}{\code{signature(object = "simpleGraph")}: gets the adjacency matrix representation}
 	\item{names}{\code{signature(x = "simpleGraph")}: gets the character vertex identifiers of a simple graph}
 	\item{names<-}{\code{signature(x = "simpleGraph")}: sets the character vertex identifiers of a simple graph}

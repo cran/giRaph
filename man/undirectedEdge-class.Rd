@@ -9,8 +9,6 @@
 \alias{show,undirectedEdge-method}
 \alias{showRel,undirectedEdge,vertexSet-method}
 \alias{areTheSame,undirectedEdge,undirectedEdge-method}
-\alias{areTheSame,undirectedEdge,edge-method}
-\alias{areTheSame,edge,undirectedEdge-method}
 \alias{[,undirectedEdge-method}
 \alias{coerce,vector,undirectedEdge-method}
 \alias{coerce,directedEdge,undirectedEdge-method}
@@ -49,10 +47,6 @@ Class \code{"numeric"}, by class \code{"integer"}.
 	  displays an undirected edge as names joined by lines}
     \item{areTheSame}{\code{signature(x = "undirectedEdge", y = "undirectedEdge")}:
 	  x and y are the same undirected edge if they are the same set of numbers}
-    \item{areTheSame}{\code{signature(x = "undirectedEdge", y = "edge")}:
-      always returns FALSE, as two edges of different kind are never the same}
-    \item{areTheSame}{\code{signature(x = "edge", y = "undirectedEdge")}:
-      always returns FALSE, as two edges of different kind are never the same}	  
     \item{[}{\code{signature(x = "undirectedEdge")}: extracts an undirected edge}
     \item{coerce}{\code{signature(from = "vector", to = "undirectedEdge")}: constructs an undirected edge from vector input}
     \item{coerce}{\code{signature(from = "directedEdge", to = "undirectedEdge")}: makes a directed edge undirected}

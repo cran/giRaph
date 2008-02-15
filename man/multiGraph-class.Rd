@@ -12,6 +12,8 @@
 \alias{incidenceList<-,multiGraph-method}
 \alias{incidenceMatrix<-,multiGraph-method}
 \alias{adjacencyList<-,multiGraph-method}
+\alias{incidenceList,multiGraph-method}
+\alias{incidenceMatrix,multiGraph-method}
 \alias{adjacencyList,multiGraph-method}
 \alias{names,multiGraph-method}
 \alias{names<-,multiGraph-method}
@@ -66,6 +68,8 @@ Class \code{"anyGraph"}, directly, with explicit coerce.
     \item{incidenceList<-}{\code{signature(x = "multiGraph")}: sets the incidence list representation}
     \item{incidenceMatrix<-}{\code{signature(x = "multiGraph")}: sets the incidence matrix representation}
     \item{adjacencyList<-}{\code{signature(x = "multiGraph")}: sets the adjacency list representation}
+    \item{incidenceList}{\code{signature(object = "multiGraph")}: gets the incidence list representation}
+    \item{incidenceMatrix}{\code{signature(object = "multiGraph")}: gets the incidence matrix representation}
     \item{adjacencyList}{\code{signature(object = "multiGraph")}: gets the adjacency list representation}
 	\item{names}{\code{signature(x = "multiGraph")}: gets the character vertex identifiers of a multi-graph}
 	\item{names<-}{\code{signature(x = "multiGraph")}: sets the character vertex identifiers of a multi-graph}

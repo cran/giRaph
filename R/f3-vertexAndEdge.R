@@ -2,8 +2,8 @@
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Tue Nov 30 14:32:00 2004
 ## Last Modified By: Luca La Rocca
-## Last Modified On: Sun Feb 26 18:01:00 2006
-## Update Count    : 27
+## Last Modified On: Fri Feb 15 13:18:00 2008
+## Update Count    : 28
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -47,8 +47,7 @@ setMethod("names","vertexSet",function(x) x@.Data)
 # 'isEmpty' method is inherited from class 'vector'
 
 # comparison method for class 'vertexSet'
-setMethod("areTheSame",c("vertexSet","vertexSet"),
-                 function(x,y) setequal(x@.Data,y@.Data))
+setMethod("areTheSame", c("vertexSet", "vertexSet"), function(x,y) setequal(x@.Data,y@.Data))
 # a 'logical' value answering the question is returned
 
 ## extraction
@@ -339,18 +338,11 @@ setMethod("isPresent",c("edge","edgeList"),
 # a 'logical' value answering the question is returned
 
 # comparison method for class 'undirectedEdge'
-setMethod("areTheSame",c("undirectedEdge","undirectedEdge"),
-                 function(x,y) setequal(x@.Data,y@.Data))
+setMethod("areTheSame", c("undirectedEdge", "undirectedEdge"), function(x,y) setequal(x@.Data,y@.Data))
 # a 'logical' value answering the question is returned
 
-# comparison method for class 'undirectedEdge' versus 'edge'
-setMethod("areTheSame",c("undirectedEdge","edge"),function(x,y) return(FALSE))
-# comparison method for class 'edge' versus 'undirectedEdge'
-setMethod("areTheSame",c("edge","undirectedEdge"),function(x,y) return(FALSE))
-# an undirected edge can be the same of another undirected edge only
-
 # comparison method for class 'directedEdge'
-setMethod("areTheSame",c("directedEdge","directedEdge"),
+setMethod("areTheSame", c("directedEdge", "directedEdge"),
                  function(x,y){
                      len<-length(x)
                      if(len==length(y)){ # maybe
@@ -367,14 +359,12 @@ setMethod("areTheSame",c("directedEdge","directedEdge"),
                ) # end of setMethod
 # a 'logical' value answering the question is returned
 
-# comparison method for class 'directedEdge' versus 'edge'
-setMethod("areTheSame",c("directedEdge","edge"),function(x,y) return(FALSE))
-# comparison method for class 'edge' versus 'directedEdge'
-setMethod("areTheSame",c("edge","directedEdge"),function(x,y) return(FALSE))
-# a directed edge can be the same of another directed edge only
+# comparison method for class 'edge' versus 'edge'
+setMethod("areTheSame", c("edge", "edge"), function(x,y) return(FALSE))
+# this will be used when comparing edges of different type
 
 # comparison method for class 'edgeList'
-setMethod("areTheSame",c("edgeList","edgeList"),
+setMethod("areTheSame", c("edgeList", "edgeList"),
           function(x,y){
             res<-(length(x)==length(y))
             if(res&&!isEmpty(x)){ # maybe and non-trivial

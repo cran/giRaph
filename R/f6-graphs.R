@@ -2,8 +2,8 @@
 ## Author          : Jens Henrik Badsberg, Claus Dethlefsen, Luca La Rocca
 ## Created On      : Fri Jun 24 10:40:00 2005
 ## Last Modified By: Luca La Rocca
-## Last Modified On: Sun Feb 26 19:19:00 2006
-## Update Count    : 79
+## Last Modified On: Fri Feb 15 14:48:00 2006
+## Update Count    : 80
 ## Status          : Unknown, Use with caution!
 ######################################################
 
@@ -514,8 +514,53 @@ setMethod("adjacencyMatrix", "simpleGraph",
           else
             as(object@incidenceList,"adjacencyMatrix")
           } # end of function
-         ) #Êend of setMethod
+         ) # end of setMethod
 # an 'adjacencyMatrix' object is returned
+
+# getting the adjacency list of a simple graph
+setMethod("adjacencyList", "simpleGraph",
+          function(object, ...) {
+          if (!isEmpty(object@adjacencyList))
+            object@adjacencyList
+          else if (!isEmpty(object@adjacencyMatrix))
+            as(object@adjacencyMatrix,"adjacencyList")
+          else if (!isEmpty(object@incidenceMatrix))
+            as(object@incidenceMatrix,"adjacencyList")
+          else
+            as(object@incidenceList,"adjacencyList")
+          } # end of function
+         ) # end of setMethod
+# an 'adjacencyList' object is returned
+
+# getting the incidence matrix of a simple graph
+setMethod("incidenceMatrix", "simpleGraph",
+          function(object, ...) {
+          if (!isEmpty(object@incidenceMatrix))
+            object@incidenceMatrix
+          else if (!isEmpty(object@adjacencyList))
+            as(object@adjacencyList,"incidenceMatrix")
+          else if (!isEmpty(object@adjacencyMatrix))
+            as(object@adjacencyMatrix,"incidenceMatrix")
+          else
+            as(object@incidenceList,"incidenceMatrix")
+          } # end of function
+         ) # end of setMethod
+# an 'incidenceMatrix' object is returned
+
+# getting the incidence list of a simple graph
+setMethod("incidenceList", "simpleGraph",
+          function(object, ...) {
+          if (!isEmpty(object@incidenceList))
+            object@incidenceList
+          else if (!isEmpty(object@incidenceMatrix))
+            as(object@incidenceMatrix,"incidenceList")
+          else if (!isEmpty(object@adjacencyList))
+            as(object@adjacencyList,"incidenceList")
+          else
+            as(object@adjacencyMatrix,"incidenceList")
+          } # end of function
+         ) # end of setMethod
+# an 'incidenceList' object is returned
 
 # getting the adjacency list of a multi graph
 setMethod("adjacencyList", "multiGraph",
@@ -526,9 +571,35 @@ setMethod("adjacencyList", "multiGraph",
               as(object@incidenceMatrix,"adjacencyList")
             else
               as(object@incidenceList,"adjacencyList")
-          } #Êend of function
+          } # end of function
          ) # end of setMethod
 # an 'adjacencyList' object is returned
+
+# getting the incidence matrix of a multi graph
+setMethod("incidenceMatrix", "multiGraph",
+          function(object, ...) {
+            if (!isEmpty(object@incidenceMatrix))
+              object@incidenceMatrix
+            else if (!isEmpty(object@adjacencyList))
+              as(object@adjacencyList,"incidenceMatrix")
+            else
+              as(object@incidenceList,"incidenceMatrix")
+          } # end of function
+         ) # end of setMethod
+# an 'incidenceMatrix' object is returned
+
+# getting the incidence list of a multi graph
+setMethod("incidenceList", "multiGraph",
+          function(object, ...) {
+            if (!isEmpty(object@incidenceList))
+              object@incidenceList
+            else if (!isEmpty(object@incidenceMatrix))
+              as(object@incidenceMatrix,"incidenceList")
+            else
+              as(object@adjacencyList,"incidenceList")
+          } # end of function
+         ) # end of setMethod
+# an 'incidenceList' object is returned
 
 # getting the incidence matrix of a general graph
 setMethod("incidenceMatrix", "generalGraph",
@@ -540,6 +611,17 @@ setMethod("incidenceMatrix", "generalGraph",
           } # end of function
          ) # end of setMethod
 # an 'incidenceMatrix' object is returned
+
+# getting the incidence list of a general graph
+setMethod("incidenceList", "generalGraph",
+          function(object, ...) {
+            if (!isEmpty(object@incidenceList))
+              object@incidenceList
+            else
+              as(object@incidenceMatrix,"incidenceList")
+          } # end of function
+         ) # end of setMethod
+# an 'incidenceList' object is returned
 
 # getting the incidence list of any graph
 setMethod("incidenceList", "anyGraph", function(object, ...) object@incidenceList)

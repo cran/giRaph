@@ -11,6 +11,7 @@
 \alias{dynamic.Graph,generalGraph-method}
 \alias{incidenceList<-,generalGraph-method}
 \alias{incidenceMatrix<-,generalGraph-method}
+\alias{incidenceList,generalGraph-method}
 \alias{incidenceMatrix,generalGraph-method}
 \alias{names,generalGraph-method}
 \alias{names<-,generalGraph-method}
@@ -61,6 +62,7 @@ Class \code{"anyGraph"}, directly, with explicit coerce.
 	  dynamic graphical representation via package 'dynamicGraph'}
     \item{incidenceList<-}{\code{signature(x = "generalGraph")}: sets the incidence list representation}
     \item{incidenceMatrix<-}{\code{signature(x = "generalGraph")}: sets the incidence matrix representation}
+    \item{incidenceList}{\code{signature(object = "generalGraph")}: gets the incidence list representation}
     \item{incidenceMatrix}{\code{signature(object = "generalGraph")}: gets the incidence matrix representation}
 	\item{names}{\code{signature(x = "generalGraph")}: gets the character vertex identifiers of a general graph}
 	\item{names<-}{\code{signature(x = "generalGraph")}: sets the character vertex identifiers of a general graph}

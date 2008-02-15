@@ -9,8 +9,6 @@
 \alias{show,directedEdge-method}
 \alias{showRel,directedEdge,vertexSet-method}
 \alias{areTheSame,directedEdge,directedEdge-method}
-\alias{areTheSame,directedEdge,edge-method}
-\alias{areTheSame,edge,directedEdge-method}
 \alias{[,directedEdge-method}
 \alias{[[,directedEdge-method}
 \alias{card,directedEdge-method}
@@ -51,10 +49,6 @@ Class \code{"vector"}, by class \code{"list"}.
 	  displays a directed edge as an ordered sequence of undirected edges joined by arrows (using character names}
     \item{areTheSame}{\code{signature(x = "directedEdge", y = "directedEdge")}:
 	  x and y are the same directed edge if they are the same ordered sequence of undirected edges}
-    \item{areTheSame}{\code{signature(x = "directedEdge", y = "edge")}:
-      always returns FALSE, as two edges of different kind are never the same}
-    \item{areTheSame}{\code{signature(x = "edge", y = "directedEdge")}:
-      always returns FALSE, as two edges of different kind are never the same}
     \item{[}{\code{signature(x = "directedEdge")}: extracts a directed edge}
     \item{[[}{\code{signature(x = "directedEdge")}: extracts an undirected edge}
     \item{card}{\code{signature(object= "directedEdge")}: counts all vertices in a directed edge}
