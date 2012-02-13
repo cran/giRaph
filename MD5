@@ -1,6 +1,6 @@
-9f943510fc986aea0e7fffdf30d49344 *DESCRIPTION
+599b259541422d1c0f999cc5bbcfafe0 *DESCRIPTION
 056bcbe236d7cd5f29c7265cfec5adf2 *NAMESPACE
-8f221c438cc917d163355f87b913ed4e *R/f0-onLoad.R
+be0d99cb60748ba888ea314924d9b7ff *R/f0-onLoad.R
 32fbe06e1a0289386cacb7d5ead439f4 *R/f1-classDefinitions.R
 e7a37d29437acd7b4b0acc561d7c5eb1 *R/f2-genericFunctions.R
 3b66a2c4521fb788051fdcc13b674491 *R/f3-vertexAndEdge.R
